@@ -1,10 +1,11 @@
 const express = require('express')
 const dotenv = require('dotenv')
+dotenv.config()
 const { sequelize, syncDatabase } = require('./database/db');
 
-dotenv.config()
 
 
+console.log(process.env.DATABASE)
 const app = express()
 
 //app.use('/auth', require('./routes/auth.route'));
