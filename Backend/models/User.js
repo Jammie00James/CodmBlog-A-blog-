@@ -31,6 +31,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -53,7 +57,7 @@ module.exports = (sequelize) => {
   // Before saving a user, hash the password using bcrypt
   User.beforeSave(async (user) => {
     if (user.changed('password')) {
-      const saltRounds = 16;
+      const saltRounds = 12;
       const hashedPassword = await bcrypt.hash(user.password, saltRounds);
       user.password = hashedPassword;
     }

@@ -1,10 +1,5 @@
 
-function relate(Role,User,Post,Comment,Reply) {
-    Role.hasMany(User, {
-        foreignKey: 'role',
-      });
-      User.belongsTo(Role, { foreignKey: 'role' });
-        
+function relate(User,Post,Comment,Reply) {
       User.hasMany(Post, {
         foreignKey: 'author',
         allowNull: false, // Ensure that 'userId' cannot be null

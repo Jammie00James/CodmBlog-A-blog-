@@ -1,23 +1,21 @@
 const express = require('express')
+const bodyParser = require('body-parser');
 const dotenv = require('dotenv')
 dotenv.config()
 const { sequelize, syncDatabase } = require('./database/db');
 
 
-
-console.log(process.env.DATABASE)
 const app = express()
 
-//app.use('/auth', require('./routes/auth.route'));
-//app.use('/home', require('./routes/home.route'));
+app.use(bodyParser.json());
+app.use('/api/auth', require('./routes/auth.route'));
+app.use('/api/user', require('./routes/user.route'));
 //app.use('/posts', require('./routes/posts.route'));
 
 app.all('*', (req,res) => {
     res.status(404).send('Page not Found')
   })
-  
 
-  
 
 async function startApp() {
   try {
@@ -25,7 +23,7 @@ async function startApp() {
     console.log('Database connection established.');
     await syncDatabase();
   } catch (error) {
-    console.error('Error connecting to the database:', error);
+    
   }
 }
 
