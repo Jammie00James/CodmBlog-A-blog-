@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv')
+const cookieParser = require('cookie-parser');
 dotenv.config()
 const { sequelize, syncDatabase } = require('./database/db');
 
@@ -8,6 +9,7 @@ const { sequelize, syncDatabase } = require('./database/db');
 const app = express()
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use('/api/auth', require('./routes/auth.route'));
 app.use('/api/user', require('./routes/user.route'));
 //app.use('/posts', require('./routes/posts.route'));

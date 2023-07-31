@@ -25,7 +25,7 @@ exports.login = async(req, res) => {
 
 
 exports.logout = (req, res) => {
-    res.clearCookie('jwt');
+    res.clearCookie('Jwt');
     res.status(200).json({ success: true, message: 'Logout successful' });
   };
   

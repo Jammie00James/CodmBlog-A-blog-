@@ -1,6 +1,7 @@
 const config = require('../config.env')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const util = require('util')
 
 
 async function makeToken(id) {
@@ -14,6 +15,16 @@ async function makeToken(id) {
   
 }
 
+async function checkToken(token) {
+  try {
+    const verifyToken = util.promisify(jwt.verify);
+    const decoded = await verifyToken(token, config.JWT_SECRET_KEY);
+    return decoded.id;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
 
 async function checkPassword(hashed, raw) {
     try {
@@ -25,4 +36,4 @@ async function checkPassword(hashed, raw) {
     }
   }
 
-module.exports = {makeToken, checkPassword}
+module.exports = {makeToken, checkPassword, checkToken}
