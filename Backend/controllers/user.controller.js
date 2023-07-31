@@ -55,7 +55,6 @@ exports.create = async (req, res) => {
 
 }
 
-
 exports.delete = async (req, res) => {
     try {
         const { username } = req.body
@@ -65,6 +64,35 @@ exports.delete = async (req, res) => {
             }
         });
         res.status(200).json({ "Message": "User Deleted" })
+    } catch (error) {
+        console.log(error)
+        res.status(401).json({ "Message": "An error occured" })
+    }
+
+}
+
+exports.changeRole = async (req, res) => {
+    try {
+        const {username,role} = req.body
+        await User.update({role:role},{
+            where: {
+                username: username
+            }
+        });
+        res.status(200).json({ "Message": "User Updated" })
+    } catch (error) {
+        console.log(error)
+        res.status(401).json({ "Message": "An error occured" })
+    }
+
+}
+
+exports.list = async (req, res) => {
+    try {
+        const users = await User.findAll({
+            attributes: ['id','username','email','role']
+        });
+        res.status(200).json(users)
     } catch (error) {
         console.log(error)
         res.status(401).json({ "Message": "An error occured" })

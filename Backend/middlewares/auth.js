@@ -17,21 +17,34 @@ const validateAuthorityUserC = (req, res, next) => {
 
 const validateAuthorityUserDE = async (req, res, next) => {
     const { username } = req.body
+    const newRole = req.body.role
     const user = await User.findOne({
         attributes: ['id', 'role'],
         where: {
             username: username
         }
     });
+
     if (user) {
         const { id, role } = req.user
-        if (role === "ROOT" && user.role !== "ROOT") {
-            next()
-        } else if (role === "ADMIN" && user.role === "EDITOR") {
-            next()
-        } else {
-            res.status(401).json({ "Message": "UnAuthorized" })
+        if(!newRole){
+            if (role === "ROOT" && (user.role === "ADMIN" || user.role === "EDITOR")) {
+                next()
+            } else if (role === "ADMIN" && user.role === "EDITOR") {
+                next()
+            } else {
+                res.status(401).json({ "Message": "UnAuthorized" })
+            }
+        }else{
+            if (role === "ROOT" && (user.role === "ADMIN" || user.role === "EDITOR") && (newRole === "ADMIN" || newRole === "EDITOR") ) {
+                next()
+            } else if (role === "ADMIN" && user.role === "EDITOR" && newRole === "EDITOR") {
+                next()
+            } else {
+                res.status(401).json({ "Message": "UnAuthorized" })
+            }
         }
+
     } else {
         res.status(401).json({ "Message": "User Doesn't exist" })
     }

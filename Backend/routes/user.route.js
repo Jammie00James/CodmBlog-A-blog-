@@ -6,10 +6,10 @@ const {validateAuthorityUserC,validateAuthorityUserDE, authenticateUser} = requi
 const router = express.Router();
 
 router.post('/register',userController.register)
-// router.post('/list',userController.list)
+router.post('/list', [authenticateUser], userController.list)
 router.post('/create',[authenticateUser, validateCreateField, validateAuthorityUserC], userController.create)
 router.post('/delete',[authenticateUser,validateAuthorityUserDE],userController.delete)
-// router.post('/changerole',userController.changeRole)
+router.post('/changerole',[authenticateUser,validateAuthorityUserDE],userController.changeRole)
 
 
 
