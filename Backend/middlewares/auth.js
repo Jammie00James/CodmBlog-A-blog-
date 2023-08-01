@@ -1,5 +1,5 @@
 const { checkToken } = require('../services/auth.service')
-const {User} = require('../database/db')
+const {User, Post} = require('../database/db')
 
 const validateAuthorityUserC = (req, res, next) => {
     const userRole = req.body.role
@@ -78,4 +78,69 @@ const authenticateUser = async (req, res, next) => {
     }
 }
 
-module.exports = { validateAuthorityUserC, validateAuthorityUserDE, authenticateUser }
+const validateAuthorityPostE = async (req, res, next) => {
+    const { postId, status } = req.body
+
+    const post = await Post.findOne({
+        attributes: ['id', 'status','author'],
+        where: {
+            id:postId
+        }
+    });
+
+    if (post) {
+        const {id} = req.user
+        if(post.author === id){
+            if(post.status !== status){
+                next()
+            }else{
+                res.status(401).json({ "Message": "Already changed" })
+            }
+        }else{
+            res.status(401).json({ "Message": "UnAuthorized" })
+        }
+    } else {
+        res.status(401).json({ "Message": "Post Doesn't exist" })
+    }
+}
+
+
+const validateAuthorityPostD = async (req, res, next) => {
+try {
+        const { postId} = req.body
+    
+        const post = await Post.findOne({
+            attributes: ['id','author'],
+            where: {
+                id:postId
+            }
+        });
+        if (post) {
+            const {id, role} = req.user
+            if(post.author === id){
+                next()
+            }else{
+                const user = await User.findOne({
+                    attributes: ['id','role'],
+                    where: {
+                        id:post.author
+                    }
+                });
+                if (role === "ROOT" && (user.role === "ADMIN" || user.role === "EDITOR")) {
+                    next()
+                } else if (role === "ADMIN" && user.role === "EDITOR") {
+                    next()
+                } else {
+                    res.status(401).json({ "Message": "UnAuthorized" })
+                }
+            }
+        } else {
+            res.status(401).json({ "Message": "Post Doesn't exist" })
+        }
+} catch (error) {
+    console.log(error)
+    res.status(401).json({ "Message": "An error occured" })
+}
+}
+
+module.exports = { validateAuthorityUserC, validateAuthorityUserDE, authenticateUser, validateAuthorityPostE, validateAuthorityPostD }

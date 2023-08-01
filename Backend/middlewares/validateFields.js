@@ -1,5 +1,5 @@
 
-const validateCreateField = (req, res, next) => {
+const validateUserCreateField = (req, res, next) => {
   const { username, email,firstname, lastname,role, password } = req.body
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,5 +28,43 @@ if(first && second && third && fourth && fifth && sixed){
 }
 }
 
+const validatePostCreateField = (req, res, next) => {
+  const { title, body, status } = req.body
+  let first = false;
+  let second = false
+  let third = false
+  if(title){
+    first = true;
+  }
+  if(body){
+    second = true;
+  }
+  if(status === 'D' || status === 'P'){
+    third = true;
+  }
+if(first && second && third){
+  next();
+}else{
+  res.status(401).json({"Message":"Invalid inputs"})
+}
+}
 
-module.exports = {validateCreateField}
+
+const validatePostChangeStatusField = (req, res, next) => {
+  const { postId, status } = req.body
+  let first = false;
+  let second = false
+  if(postId){
+    first = true;
+  }
+  if(status === 'D' || status === 'P'){
+    second = true;
+  }
+if(first && second){
+  next();
+}else{
+  res.status(401).json({"Message":"Invalid inputs"})
+}
+}
+
+module.exports = {validateUserCreateField, validatePostCreateField,validatePostChangeStatusField}
