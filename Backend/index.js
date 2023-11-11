@@ -13,10 +13,11 @@ app.use(cookieParser());
 app.use('/api/auth', require('./routes/auth.route'));
 app.use('/api/user', require('./routes/user.route'));
 app.use('/api/post', require('./routes/posts.route'));
+app.use('/api/public', require('./routes/public.route'));
 
-app.all('*', (req,res) => {
-    res.status(404).send('Page not Found')
-  })
+app.all('*', (req, res) => {
+  res.status(404).send('Page not Found')
+})
 
 
 async function startApp() {
@@ -25,12 +26,12 @@ async function startApp() {
     console.log('Database connection established.');
     await syncDatabase();
   } catch (error) {
-    
+
   }
 }
 
-app.listen(5000, ()=>{
-      console.log('App is running on port 5000')
-      startApp();
-  })
-  
+app.listen(5000, async () => {
+  await startApp();
+  console.log('App is running on port 5000')
+
+})

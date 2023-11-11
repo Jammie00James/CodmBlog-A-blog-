@@ -4,6 +4,7 @@ const { Op } = require("sequelize");
 exports.register = async (req, res) => {
     try {
         const { username, email, firstname, lastname, password } = req.body
+        if(!username || !password || !email || !firstname || !lastname ) return  res.status(400).json({"Error":"fields must not be empty"})
         const users = await User.findAll({
             limit: 1,
         });
@@ -28,6 +29,8 @@ exports.register = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         const { username, email, firstname, lastname, role, password } = req.body
+        if(!username || !password || !email || !firstname || !lastname || !role ) return  res.status(400).json({"Error":"fields must not be empty"})
+        if(role != "ROOT" && role != "ADMIN" && role != "USER") return  res.status(400).json({"Error":"role can either be ADMIN or ROOT or USER"})
         const users = await User.findAll({
             attributes: ['id'],
             where: {
@@ -58,6 +61,7 @@ exports.create = async (req, res) => {
 exports.delete = async (req, res) => {
     try {
         const { username } = req.body
+        if(!username) return  res.status(400).json({"Error":"fields must not be empty"})
         await User.destroy({
             where: {
                 username: username
@@ -74,6 +78,7 @@ exports.delete = async (req, res) => {
 exports.changeRole = async (req, res) => {
     try {
         const {username,role} = req.body
+        if(!username || !role) return  res.status(400).json({"Error":"fields must not be empty"})
         await User.update({role:role},{
             where: {
                 username: username

@@ -5,6 +5,7 @@ const {User,Post} = require('../database/db')
 exports.create = async(req, res) => {
     try {
         const { title, body, status } = req.body
+        if(!title || !body ) return  res.status(400).json({"Error":"fields must not be empty"})
         const {id} = req.user
         let post
         if(status === 'D'){
@@ -29,6 +30,7 @@ exports.create = async(req, res) => {
 exports.changeStatus = async(req, res) => {
     try {
         const { postId, status } = req.body
+        if(!postId && !status ) return  res.status(400).json({"Error":"fields must not be empty"})
         if(status === 'D'){
             await Post.update({status:status,publishedAt:null},{
                 where: {
@@ -55,6 +57,7 @@ exports.changeStatus = async(req, res) => {
 exports.delete = async(req, res) => {
     try {
         const { postId } = req.body
+        if(!postId) return  res.status(400).json({"Error":"fields must not be empty"})
         await Post.destroy({
             where: {
                 id:postId
