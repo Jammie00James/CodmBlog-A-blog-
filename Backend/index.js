@@ -7,6 +7,15 @@ const { sequelize, syncDatabase } = require('./database/db');
 
 
 const app = express()
+app.use((req, res, next) => {
+  // Set Access-Control-Allow-Origin to allow requests from any origin
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Add other CORS headers as needed
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 app.use(bodyParser.json());
 app.use(cookieParser());
