@@ -64,14 +64,11 @@
         let data
         async function setup() {
             try {
-
-                const jwtToken = localStorage.getItem("AuthToken");
-
                 let res = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Cookie': `Jwt=${jwtToken}`,
+                        "Authorization" :"Bearer " + localStorage.getItem("AuthToken"),
                     },
                     credentials:"include"
                 });
@@ -92,6 +89,7 @@
             // Example user data from the API response
             if (data.length > 0) {
                 const exampleUsers = data
+                loadUsers(exampleUsers);
             }
 
 
