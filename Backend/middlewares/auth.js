@@ -66,7 +66,7 @@ const authenticateUser = async (req, res, next) => {
 
         if (tokenHeader) {
             // Verify the token
-            let id = checkToken(tokenHeader)
+            let id = await checkToken(tokenHeader)
             if (id) {
                 const user = await User.findOne({
                     attributes: ['id', 'role'],
