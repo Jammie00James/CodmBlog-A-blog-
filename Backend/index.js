@@ -9,7 +9,7 @@ const { sequelize, syncDatabase } = require('./database/db');
 const app = express()
 app.use((req, res, next) => {
   // Set Access-Control-Allow-Origin to allow requests from any origin
-  res.setHeader('Access-Control-Allow-Origin', '127.0.0.1:8080');
+  res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:8080');
   // Add other CORS headers as needed
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
