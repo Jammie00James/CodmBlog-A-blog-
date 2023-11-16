@@ -1,5 +1,5 @@
 const { checkToken } = require('../services/auth.service')
-const {User, Post} = require('../database/db')
+const { User, Post } = require('../database/db')
 
 const validateAuthorityUserC = (req, res, next) => {
     const userRole = req.body.role
@@ -27,7 +27,7 @@ const validateAuthorityUserDE = async (req, res, next) => {
 
     if (user) {
         const { id, role } = req.user
-        if(!newRole){
+        if (!newRole) {
             if (role === "ROOT" && (user.role === "ADMIN" || user.role === "EDITOR")) {
                 next()
             } else if (role === "ADMIN" && user.role === "EDITOR") {
@@ -35,8 +35,8 @@ const validateAuthorityUserDE = async (req, res, next) => {
             } else {
                 res.status(401).json({ "Message": "UnAuthorized" })
             }
-        }else{
-            if (role === "ROOT" && (user.role === "ADMIN" || user.role === "EDITOR") && (newRole === "ADMIN" || newRole === "EDITOR") ) {
+        } else {
+            if (role === "ROOT" && (user.role === "ADMIN" || user.role === "EDITOR") && (newRole === "ADMIN" || newRole === "EDITOR")) {
                 next()
             } else if (role === "ADMIN" && user.role === "EDITOR" && newRole === "EDITOR") {
                 next()
@@ -51,30 +51,43 @@ const validateAuthorityUserDE = async (req, res, next) => {
 }
 
 const authenticateUser = async (req, res, next) => {
-    const token = req.cookies.Jwt;
-    if (token) {
-        // Verify the token
-        console.log('jah')
-        let id = await checkToken(token)
-        if (id) {
-            const user = await User.findOne({
-                attributes: ['id', 'role'],
-                where: {
-                    id: id
+    try {
+        let tokenHeader
+        const authHeader = req.headers.authorization;
+        if (authHeader) {
+            // Split the header to extract the type and token/credentials
+            const [authType, authValue] = authHeader.split(' ');
+
+            if (authType === 'Bearer' && authValue) {
+                // Handle JWT authentication
+                tokenHeader = authValue;
+            }
+        }
+
+        if (tokenHeader) {
+            // Verify the token
+            let id = checkToken(tokenHeader)
+            if (id) {
+                const user = await User.findOne({
+                    attributes: ['id', 'role'],
+                    where: {
+                        id: id
+                    }
+                });
+                if (user) {
+                    req.user = user;
+                    next();
+                } else {
+                    return res.status(401).json({ error: 'Invalid Token' });
                 }
-            });
-            if (user) {
-                req.user = user;
-                next();
             } else {
                 return res.status(401).json({ error: 'Invalid Token' });
             }
         } else {
-            return res.status(401).json({ error: 'Invalid Token' });
+            return res.status(401).json({ error: 'No token provided' });
         }
-
-    } else {
-        return res.status(401).json({ error: 'No token provided' });
+    } catch (error) {
+        return res.status(401).json({ error: 'Invalid Token' });
     }
 }
 
@@ -82,21 +95,21 @@ const validateAuthorityPostE = async (req, res, next) => {
     const { postId, status } = req.body
 
     const post = await Post.findOne({
-        attributes: ['id', 'status','author'],
+        attributes: ['id', 'status', 'author'],
         where: {
-            id:postId
+            id: postId
         }
     });
 
     if (post) {
-        const {id} = req.user
-        if(post.author === id){
-            if(post.status !== status){
+        const { id } = req.user
+        if (post.author === id) {
+            if (post.status !== status) {
                 next()
-            }else{
+            } else {
                 res.status(401).json({ "Message": "Already changed" })
             }
-        }else{
+        } else {
             res.status(401).json({ "Message": "UnAuthorized" })
         }
     } else {
@@ -106,24 +119,24 @@ const validateAuthorityPostE = async (req, res, next) => {
 
 
 const validateAuthorityPostD = async (req, res, next) => {
-try {
-        const { postId} = req.body
-    
+    try {
+        const { postId } = req.body
+
         const post = await Post.findOne({
-            attributes: ['id','author'],
+            attributes: ['id', 'author'],
             where: {
-                id:postId
+                id: postId
             }
         });
         if (post) {
-            const {id, role} = req.user
-            if(post.author === id){
+            const { id, role } = req.user
+            if (post.author === id) {
                 next()
-            }else{
+            } else {
                 const user = await User.findOne({
-                    attributes: ['id','role'],
+                    attributes: ['id', 'role'],
                     where: {
-                        id:post.author
+                        id: post.author
                     }
                 });
                 if (role === "ROOT" && (user.role === "ADMIN" || user.role === "EDITOR")) {
@@ -137,10 +150,10 @@ try {
         } else {
             res.status(401).json({ "Message": "Post Doesn't exist" })
         }
-} catch (error) {
-    console.log(error)
-    res.status(401).json({ "Message": "An error occured" })
-}
+    } catch (error) {
+        console.log(error)
+        res.status(401).json({ "Message": "An error occured" })
+    }
 }
 
 module.exports = { validateAuthorityUserC, validateAuthorityUserDE, authenticateUser, validateAuthorityPostE, validateAuthorityPostD }
