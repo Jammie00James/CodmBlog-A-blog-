@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .dashboard-container {
+            text-align: center;
+        }
+
+        .dashboard-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .dashboard-button {
+            padding: 40px;
+            font-size: 18px;
+            border: none;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .dashboard-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <h2>Welcome to the Control Dashboard</h2>
+        <div class="dashboard-buttons">
+            <button class="dashboard-button" onclick="goToUsers()">Users</button>
+            <button class="dashboard-button" onclick="goToPosts()">Posts</button>
+        </div>
+    </div>
+
+    <script>
+        function goToUsers() {
+            // Redirect to the Users page
+            window.location.href = 'users.html';
+        }
+
+        function goToPosts() {
+            // Redirect to the Posts page
+            window.location.href = 'posts.html';
+        }
+    </script>
+
+</body>
+
+</html>

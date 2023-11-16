@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .users-container {
+            text-align: center;
+        }
+
+        .user-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .user-item {
+            margin: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .create-user-button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .create-user-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="users-container">
+        <h2>Users</h2>
+        <ul class="user-list" id="userList"></ul>
+        <button class="create-user-button" onclick="createNewUser()">Create New User</button>
+    </div>
+
+    <script>
+        const apiUrl = 'https://codm-a-blog.onrender.com/api/user/list';
+        let data
+        async function setup() {
+            try {
+
+                const jwtToken = localStorage.getItem("AuthToken");
+
+                let res = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cookie': `Jwt=${jwtToken}`,
+                    },
+                    credentials:"include"
+                });
+                console.log(res.headers)
+                console.log(localStorage.getItem("AuthToken"));
+                data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(`${data.Message}`);
+                }
+
+                // Assuming your API returns a property named 
+            } catch (error) {
+                console.error('Fetch error:', error.message);
+            }
+
+
+            // Example user data from the API response
+            if (data.length > 0) {
+                const exampleUsers = data
+            }
+
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const userList = document.getElementById('userList');
+
+                // Load users when the page loads
+                loadUsers(exampleUsers);
+            });
+        }
+
+        function loadUsers(users) {
+            const userList = document.getElementById('userList');
+
+            // Clear existing user list
+            userList.innerHTML = '';
+
+            // Populate the user list
+            users.forEach(user => {
+                const userItem = document.createElement('li');
+                userItem.classList.add('user-item');
+                userItem.textContent = `Username: ${user.username}, Email: ${user.email}, Role: ${user.role}`;
+                userList.appendChild(userItem);
+            });
+        }
+
+        function createNewUser() {
+            // Add your logic to handle the creation of a new user
+            alert('Functionality to create a new user will be implemented here.');
+        }
+        setup()
+    </script>
+
+</body>
+
+</html>

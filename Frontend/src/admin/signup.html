@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>Signup</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,7 +17,7 @@
             height: 100vh;
         }
 
-        .login-container {
+        .signup-container {
             background-color: #fff;
             padding: 20px;
             border-radius: 5px;
@@ -26,11 +26,11 @@
             text-align: center;
         }
 
-        .login-container h2 {
+        .signup-container h2 {
             color: #333;
         }
 
-        .login-form {
+        .signup-form {
             margin-top: 20px;
         }
 
@@ -65,18 +65,56 @@
             background-color: #2980b9;
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', async function () {
-            const loginForm = document.querySelector('.login-form');
-            const messageContainer = document.createElement('div');
-            loginForm.appendChild(messageContainer);
+</head>
 
-            loginForm.addEventListener('submit', async function (event) {
+<body>
+
+    <div class="signup-container">
+        <h2>Signup</h2>
+        <form class="signup-form" action="#" method="post">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="firstname">First Name:</label>
+                <input type="text" id="firstname" name="firstname" required>
+            </div>
+            <div class="form-group">
+                <label for="lastname">Last Name:</label>
+                <input type="text" id="lastname" name="lastname" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Signup</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const signupForm = document.querySelector('.signup-form');
+            const messageContainer = document.createElement('div');
+            signupForm.appendChild(messageContainer);
+
+            signupForm.addEventListener('submit', async function (event) {
                 event.preventDefault();
 
                 const username = document.getElementById('username').value;
+                const email = document.getElementById('email').value;
+                const firstname = document.getElementById('firstname').value;
+                const lastname = document.getElementById('lastname').value;
                 const password = document.getElementById('password').value;
-                const apiUrl = 'https://codm-a-blog.onrender.com/api/auth/login';
+
+                // Replace 'https://example.com/api/signup' with the actual API endpoint
+                const apiUrl = 'https://codm-a-blog.onrender.com/api/user/register';
 
                 try {
                     let res = await fetch(apiUrl, {
@@ -84,7 +122,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ username, password }),
+                        body: JSON.stringify({ username,email, firstname, lastname, password }),
                     });
 
                     let data = await res.json();
@@ -95,9 +133,8 @@
 
                     // Assuming your API returns a property named 'success'
                     if (data.Message) {
-                        localStorage.setItem("AuthToken", data.Jwt)
                         showMessage(data.Message, 'success');
-                        window.location.href = 'dashboard.html';
+                        window.location.href = 'login.html';
                     } 
                 } catch (error) {
                     showMessage(error.message, 'error');
@@ -113,28 +150,8 @@
                     messageContainer.textContent = '';
                 }, 5000);
             }
-        });
+            });
     </script>
-</head>
-
-<body>
-
-    <div class="login-container">
-        <h2>Admin Login</h2>
-        <form class="login-form" action="#" method="post">
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Login</button>
-            </div>
-        </form>
-    </div>
 
 </body>
 

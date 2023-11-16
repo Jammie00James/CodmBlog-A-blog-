@@ -4,7 +4,7 @@ const {checkPassword, makeToken} = require('../services/auth.service')
 
 exports.login = async(req, res) => {
     const { username, password } = req.body
-    if(!username || !password ) return  res.status(400).json({"Error":"Username and password must not be empty"})
+    if(!username || !password ) return  res.status(400).json({"Message":"Username and password must not be empty"})
     const user = await User.findOne({
         attributes: ['id', 'password'],
         where: {

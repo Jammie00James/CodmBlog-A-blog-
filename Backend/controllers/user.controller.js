@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 exports.register = async (req, res) => {
     try {
         const { username, email, firstname, lastname, password } = req.body
-        if(!username || !password || !email || !firstname || !lastname ) return  res.status(400).json({"Error":"fields must not be empty"})
+        if(!username || !password || !email || !firstname || !lastname ) return  res.status(400).json({"Message":"fields must not be empty"})
         const users = await User.findAll({
             limit: 1,
         });
